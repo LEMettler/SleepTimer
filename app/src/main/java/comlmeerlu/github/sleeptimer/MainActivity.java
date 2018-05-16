@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity{
 
         initCountdownTimer(seconds);
     }
-
+      //intitializes the Countdown
     private void initCountdownTimer(int time){
         countDownTimer = new CountDownTimer(1000 * time, 1000) {
             @Override
-            public void onTick(long millisUntilFinished) {
+            public void onTick(long millisUntilFinished) {  //if the timer is stopped, the next tick cancels the timer
                 if (stop){
                     cancel();
                     stop = false;
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity{
         };
     }
 
+   //changes the wifi-state
     public void changeWifi(){
 
         wifiManager.setWifiEnabled(!wifiManager.isWifiEnabled());
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+   //starts and stops the countdown
     public void CountdownHandler(final View view) throws InterruptedException {
         if (!finished) {
             if (!counting) {
