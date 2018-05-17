@@ -10,9 +10,11 @@
         android:id="@+id/txtOnOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="52dp"
-        android:text="change wifi in:"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="44dp"
+        android:text="Countdown"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,10 +24,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="44dp"
         android:text="countdown"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.162"
+        app:layout_constraintHorizontal_bias="0.233"
         app:layout_constraintStart_toEndOf="@+id/txtOnOff"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,13 +37,18 @@
         android:id="@+id/btnCountdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="124dp"
         android:onClick="CountdownHandler"
         android:text="Start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.442"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
-        app:layout_constraintVertical_bias="0.089" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.435" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -47,5 +56,47 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
+
+    <EditText
+        android:id="@+id/inputSeconds"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="104dp"
+        android:ems="10"
+        android:hint="Seconds"
+        android:inputType="numberDecimal"
+        android:text="00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/inputMinutes"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="104dp"
+        android:ems="10"
+        android:hint="Minutes"
+        android:inputType="numberDecimal"
+        android:text="00"
+        app:layout_constraintEnd_toStartOf="@+id/inputSeconds"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/inputHours"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="104dp"
+        android:ems="10"
+        android:hint="Hours"
+        android:inputType="numberDecimal"
+        android:text="00"
+        app:layout_constraintEnd_toStartOf="@+id/inputMinutes"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

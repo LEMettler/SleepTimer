@@ -5,8 +5,12 @@ import android.net.wifi.WifiManager;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity{
@@ -14,10 +18,14 @@ public class MainActivity extends AppCompatActivity{
    private Button btnCountdown;
    private TextView txtCountdown;
    private TextView txtOnOff;
-   private WifiManager wifiManager;
+   private EditText inputMinutes;
+    private EditText inputHours;
+    private EditText inputSeconds;
 
+   private WifiManager wifiManager;
    private CountDownTimer countDownTimer;
-    private int seconds;
+
+    private long time;
    private boolean counting;
     private boolean stop;
     private boolean finished;
@@ -28,16 +36,22 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        seconds = 10;
+        time = 0;
         counting = false;
         stop = false;
-        finished = false;
+        finished = true;
 
 
         btnCountdown = findViewById(R.id.btnCountdown);
         txtCountdown = findViewById(R.id.txtCountdown);
-        txtCountdown.setText(String.format("%d",seconds));
+        txtCountdown.setText(String.format("%d", time));
         txtOnOff = findViewById(R.id.txtOnOff);
+        inputHours = findViewById(R.id.inputHours);
+        inputMinutes = findViewById(R.id.inputMinutes);
+        inputSeconds = findViewById(R.id.inputSeconds);
+
+
+
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         if (wifiManager.isWifiEnabled())
@@ -45,10 +59,12 @@ public class MainActivity extends AppCompatActivity{
         else
             txtOnOff.setText("Enable WIFI in");
 
-        initCountdownTimer(seconds);
+        //initCountdownTimer();
     }
 
-    private void initCountdownTimer(int time){
+    private void initCountdownTimer(){
+
+
         countDownTimer = new CountDownTimer(1000 * time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -82,6 +98,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void CountdownHandler(final View view) throws InterruptedException {
+
+        time = Integer.parseInt(inputSeconds.getText().toString());
+        time = time + Integer.parseInt(inputMinutes.getText().toString()) * 60;
+        time = time + Integer.parseInt(inputHours.getText().toString()) *60 * 60;
+
         if (!finished) {
             if (!counting) {
                 countDownTimer.start();
@@ -92,8 +113,12 @@ public class MainActivity extends AppCompatActivity{
             }
             counting = !counting;
         }else {
-            countDownTimer.start();
-            finished = false;
+            if (time != 0) {
+                initCountdownTimer();
+                countDownTimer.start();
+                finished = false;
+            }
+
         }
     }
 }
