@@ -4,51 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comlmeerlu.github.sleeptimer.MainActivity">
+    android:background="@drawable/background"
+    tools:context="comlmeerlu.github.sleeptimer.MainActivity"
+    tools:layout_editor_absoluteY="25dp">
 
     <TextView
         android:id="@+id/txtOnOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="44dp"
-        android:text="Countdown"
-        android:textSize="18sp"
+        android:layout_marginTop="28dp"
+        android:text="Sleep in:"
+        android:textColor="@color/colorText"
+        android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/txtCountdown"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtApp" />
 
     <TextView
         android:id="@+id/txtCountdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="28dp"
         android:text="countdown"
+        android:textColor="@color/colorText"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txtOnOff"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtApp" />
 
     <Button
         android:id="@+id/btnCountdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="124dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/btndark"
         android:onClick="CountdownHandler"
         android:text="Start"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.442"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.435" />
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -61,42 +62,153 @@
         android:id="@+id/inputSeconds"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Seconds"
         android:inputType="numberDecimal"
         android:text="00"
+        android:textColor="@color/colorText"
+        android:textColorLink="@android:color/holo_blue_bright"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtOnOff" />
 
     <EditText
         android:id="@+id/inputMinutes"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Minutes"
         android:inputType="numberDecimal"
-        android:text="00"
-        app:layout_constraintEnd_toStartOf="@+id/inputSeconds"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="10"
+        android:textColor="@color/colorText"
+        android:textColorLink="@android:color/holo_blue_bright"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
+        app:layout_constraintVertical_bias="0.14999998" />
 
     <EditText
         android:id="@+id/inputHours"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Hours"
         android:inputType="numberDecimal"
         android:text="00"
-        app:layout_constraintEnd_toStartOf="@+id/inputMinutes"
-        app:layout_constraintHorizontal_bias="0.666"
+        android:textColor="@color/colorText"
+        android:textColorLink="@android:color/holo_blue_bright"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCountdown" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/btnCountdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputMinutes">
+
+        <Switch
+            android:id="@+id/switchWIFI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Wifi"
+            android:textColor="@color/colorText"
+            android:textColorLink="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            tools:layout_margin="10dp" />
+
+        <Switch
+            android:id="@+id/switchBLUE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bluetooth "
+            android:textColor="@color/colorText"
+            android:textColorLink="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            tools:layout_margin="10dp" />
+
+        <Switch
+            android:id="@+id/switchAir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AirplaneMode "
+            android:textColor="@color/colorText"
+            android:textColorLink="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            android:visibility="gone"
+            tools:layout_margin="10dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtApp"
+        android:layout_width="159dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="cursive"
+        android:text="SleepTimer"
+        android:textAlignment="center"
+        android:textColor="@color/colorText"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text=":"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
+        app:layout_constraintVertical_bias="0.43"
+        tools:layout_editor_absoluteX="140dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=":"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/inputSeconds"
+        app:layout_constraintStart_toEndOf="@+id/inputMinutes"
+        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
+        app:layout_constraintVertical_bias="0.43" />
 
 </android.support.constraint.ConstraintLayout>
