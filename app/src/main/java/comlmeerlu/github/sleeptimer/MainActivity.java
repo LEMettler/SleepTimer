@@ -1,12 +1,8 @@
 package comlmeerlu.github.sleeptimer;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.nfc.NfcManager;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -14,14 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity{
 
-   private Button btnCountdown;
    private TextView txtCountdown;
    private TextView txtOnOff;
    private EditText inputHours;
@@ -30,12 +24,16 @@ public class MainActivity extends AppCompatActivity{
    private Switch sWifi;
    private Switch sAir;
    private Switch sBlue;
+   private Button btnStop;
+   private Button btnReset;
+   private Button btnStart;
 
 
     private WifiManager wifiManager;
     private BluetoothAdapter mBluetoothAdapter;
     private CountDownTimer countDownTimer;
 
+    private long secUntilFinished;
     private int seconds;
     private boolean counting;
     private boolean stop;
@@ -60,7 +58,10 @@ public class MainActivity extends AppCompatActivity{
         seconds = getTime();
 
 
-        btnCountdown = findViewById(R.id.btnCountdown);
+        btnStart = findViewById(R.id.btnCountdown);
+        btnReset = findViewById(R.id.btnReset);
+        btnStop = findViewById(R.id.btnStop);
+
         txtCountdown = findViewById(R.id.txtCountdown);
         txtCountdown.setText(String.format("%d",seconds));
         txtOnOff = findViewById(R.id.txtOnOff);
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity{
                     stop = false;
                 }else {
                     //Integer.toString can't be applied to textviews, bc it doesn't regard some specific formats
-                    txtCountdown.setText(String.format("%d", (int) (millisUntilFinished / 1000)) + " sec");
+                    secUntilFinished = (millisUntilFinished / 1000);
+                    txtCountdown.setText(String.format("%d", (int) secUntilFinished) + " sec");
                 }
             }
 
@@ -98,7 +100,10 @@ public class MainActivity extends AppCompatActivity{
             public void onFinish() {
                 changeStates();
                 finished = true;
-                btnCountdown.setText("Start");
+                counting = false;
+                btnStart.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.GONE);
+                btnReset.setVisibility(View.GONE);
             }
         };
     }
@@ -109,7 +114,6 @@ public class MainActivity extends AppCompatActivity{
 
         if (sBlue.isChecked())
                 mBluetoothAdapter.disable();
-
 
         if (sAir.isChecked()) {
 
@@ -123,26 +127,39 @@ public class MainActivity extends AppCompatActivity{
             //intent.putExtra("state", !false);
             //sendBroadcast(intent);
         }
-
-
-
     }
 
-    public void CountdownHandler(final View view) throws InterruptedException {
-        if (!finished) {
-            if (!counting) {
-                countDownTimer.start();
-                btnCountdown.setText("Stop");
-            } else {
-                initCountdownTimer(getTime());
-                stop = true;
-                btnCountdown.setText("Start");
-            }
-            counting = !counting;
-        }else {
-            initCountdownTimer(getTime());
+    public void btnStopHandler(View view){
+        if (counting) {
+            stop = true;
+            counting = false;
+            btnStop.setText("CONTINUE");
+        } else {
+            counting = true;
+            btnStop.setText("STOP");
+            initCountdownTimer((int) secUntilFinished);
             countDownTimer.start();
-            finished = false;
         }
+    }
+
+    public void btnResetHandler(View view){
+        if (counting) {
+            stop = true;
+        }
+        counting = false;
+        btnStart.setVisibility(View.VISIBLE);
+        btnStop.setVisibility(View.GONE);
+        btnStop.setText("STOP");
+        btnReset.setVisibility(View.GONE);
+    }
+
+    public void btnStartHandler(View view) throws InterruptedException {
+
+        initCountdownTimer(getTime());
+        countDownTimer.start();
+        btnStart.setVisibility(View.GONE);
+        btnStop.setVisibility(View.VISIBLE);
+        btnReset.setVisibility(View.VISIBLE);
+        counting = true;
     }
 }

@@ -9,63 +9,86 @@
     tools:layout_editor_absoluteY="25dp">
 
     <TextView
+        android:id="@+id/txtApp"
+        android:layout_width="159dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="cursive"
+        android:text="SleepTimer"
+        android:textAlignment="center"
+        android:textColor="@color/colorText"
+        android:textSize="36sp"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+
+    <TextView
         android:id="@+id/txtOnOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Sleep in:"
         android:textColor="@color/colorText"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/txtCountdown"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/txtApp" />
 
     <TextView
         android:id="@+id/txtCountdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="72dp"
+        android:layout_marginTop="8dp"
         android:text="countdown"
         android:textColor="@color/colorText"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/txtOnOff"
         app:layout_constraintTop_toBottomOf="@+id/txtApp" />
 
     <Button
         android:id="@+id/btnCountdown"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/btndark"
-        android:onClick="CountdownHandler"
+        android:onClick="btnStartHandler"
         android:text="Start"
         android:textColor="@color/colorText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_begin="-20dp" />
 
     <EditText
         android:id="@+id/inputSeconds"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="52dp"
         android:ems="10"
         android:hint="Seconds"
         android:inputType="numberDecimal"
@@ -74,29 +97,26 @@
         android:textColorLink="@android:color/holo_blue_bright"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.97"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOnOff" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCountdown"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/inputMinutes"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="52dp"
         android:ems="10"
         android:hint="Minutes"
         android:inputType="numberDecimal"
         android:text="10"
         android:textColor="@color/colorText"
         android:textColorLink="@android:color/holo_blue_bright"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
-        app:layout_constraintVertical_bias="0.14999998" />
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/txtCountdown"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/inputHours"
@@ -105,7 +125,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:ems="10"
         android:hint="Hours"
         android:inputType="numberDecimal"
@@ -113,21 +133,23 @@
         android:textColor="@color/colorText"
         android:textColorLink="@android:color/holo_blue_bright"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCountdown" />
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
+        app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="172dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/btnCountdown"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputMinutes">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Switch
             android:id="@+id/switchWIFI"
@@ -137,8 +159,8 @@
             android:text="Wifi"
             android:textColor="@color/colorText"
             android:textColorLink="@android:color/holo_blue_dark"
-            android:textSize="18sp"
-            tools:layout_margin="10dp" />
+            android:textSize="24sp"
+            tools:layout_margin="15dp" />
 
         <Switch
             android:id="@+id/switchBLUE"
@@ -147,8 +169,8 @@
             android:text="Bluetooth "
             android:textColor="@color/colorText"
             android:textColorLink="@android:color/holo_blue_dark"
-            android:textSize="18sp"
-            tools:layout_margin="10dp" />
+            android:textSize="24sp"
+            tools:layout_margin="15dp" />
 
         <Switch
             android:id="@+id/switchAir"
@@ -164,51 +186,79 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtApp"
-        android:layout_width="159dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="cursive"
-        android:text="SleepTimer"
-        android:textAlignment="center"
-        android:textColor="@color/colorText"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="60dp"
         android:text=":"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/inputMinutes"
         app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
-        app:layout_constraintVertical_bias="0.43"
-        tools:layout_editor_absoluteX="140dp" />
+        app:layout_constraintVertical_bias="0.012" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="60dp"
         android:text=":"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toStartOf="@+id/inputSeconds"
-        app:layout_constraintStart_toEndOf="@+id/inputMinutes"
-        app:layout_constraintTop_toBottomOf="@+id/txtOnOff"
-        app:layout_constraintVertical_bias="0.43" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCountdown"
+        app:layout_constraintVertical_bias="0.012" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="-4dp" />
+
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/btndark"
+        android:onClick="btnResetHandler"
+        android:text="RESET"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnStop"
+        app:layout_constraintHorizontal_bias="0.138"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.983" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/btndark"
+        android:onClick="btnStopHandler"
+        android:text="Stop"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.983" />
 
 </android.support.constraint.ConstraintLayout>
