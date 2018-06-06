@@ -1,5 +1,6 @@
 package comlmeerlu.github.sleeptimer;
 
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -10,11 +11,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements NumberPicker.OnClickListener{
 
    private TextView txtCountdown;
    private TextView txtOnOff;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity{
    private Button btnStop;
    private Button btnReset;
    private Button btnStart;
+   private Button btnTest;
 
 
     private WifiManager wifiManager;
@@ -57,10 +60,52 @@ public class MainActivity extends AppCompatActivity{
         inputSeconds = findViewById(R.id.inputSeconds);
         seconds = getTime();
 
-
         btnStart = findViewById(R.id.btnCountdown);
         btnReset = findViewById(R.id.btnReset);
         btnStop = findViewById(R.id.btnStop);
+
+        //* *****************************************************************************************
+        btnTest = findViewById(R.id.btnTest);
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog d = new Dialog(MainActivity.this);
+                d.setTitle("Countdown Picker");
+                d.setContentView(R.layout.dialog);
+
+                Button btnDelete = (Button) d.findViewById(R.id.btnDelete);
+                Button btnSave = (Button) d.findViewById(R.id.btnSave);
+
+                final NumberPicker pickMin = (NumberPicker) d.findViewById(R.id.pickMin);
+                pickMin.setMaxValue(100);
+                pickMin.setMinValue(1);
+                pickMin.setWrapSelectorWheel(false);
+
+                final NumberPicker pickSec = (NumberPicker) d.findViewById(R.id.pickSec);
+                pickSec.setMaxValue(59);
+                pickSec.setMinValue(0);
+                pickSec.setWrapSelectorWheel(false);
+
+                btnSave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        seconds = pickSec.getValue();
+                        seconds += pickMin.getValue()*60;
+                        d.dismiss();
+                    }
+                });
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        d.dismiss();
+                    }
+                });
+                d.show();
+
+        }
+        });
+        //******************************************************************************************
 
         txtCountdown = findViewById(R.id.txtCountdown);
         txtCountdown.setText(String.format("%d",seconds));
@@ -161,5 +206,10 @@ public class MainActivity extends AppCompatActivity{
         btnStop.setVisibility(View.VISIBLE);
         btnReset.setVisibility(View.VISIBLE);
         counting = true;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
