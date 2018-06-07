@@ -1,6 +1,8 @@
 package comlmeerlu.github.sleeptimer;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -194,9 +196,11 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
             stop = true;
             counting = false;
             btnStop.setText("CONTINUE");
+            btnStop.setTextSize(14);
         } else {
             counting = true;
             btnStop.setText("STOP");
+            btnStop.setTextSize(18);
             initCountdownTimer((int) secUntilFinished);
             countDownTimer.start();
         }
@@ -211,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setVisibility(View.GONE);
         btnStop.setText("STOP");
+        btnStop.setTextSize(18);
         btnReset.setVisibility(View.GONE);
         btnInput.setClickable(false);
         btnInput.setText(secToUFCStandard(startSec));
@@ -225,6 +230,19 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         btnReset.setVisibility(View.VISIBLE);
         btnInput.setClickable(false);
         counting = true;
+
+        pushNote();
+    }
+
+    //todo push notification
+    private void pushNote(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification note = new Notification.Builder(getApplicationContext()).setContentTitle("ComfySleep").setContentText("Countdown running").setSmallIcon(R.drawable.ic_launcher_foreground).build();
+            note.flags |= Notification.FLAG_AUTO_CANCEL;
+            manager.notify(0, note);
+
+        }
     }
 
     @Override

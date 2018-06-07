@@ -31,7 +31,7 @@
         android:id="@+id/btnCountdown"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -45,7 +45,7 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnInput"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.705" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -60,9 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtApp">
 
@@ -71,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:text="Wifi"
+            android:text="Wifi "
             android:textColor="@color/colorText"
             android:textColorLink="@android:color/holo_blue_dark"
             android:textSize="24sp"
@@ -105,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="267dp" />
+        app:layout_constraintGuide_end="385dp" />
 
     <Button
         android:id="@+id/btnReset"
@@ -123,10 +124,10 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintHorizontal_bias="0.116"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnInput"
-        app:layout_constraintVertical_bias="0.7" />
+        app:layout_constraintVertical_bias="0.705" />
 
     <Button
         android:id="@+id/btnStop"
@@ -144,10 +145,10 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintHorizontal_bias="0.883"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnInput"
-        app:layout_constraintVertical_bias="0.7" />
+        app:layout_constraintVertical_bias="0.705" />
 
     <Button
         android:id="@+id/btnInput"
