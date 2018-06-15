@@ -5,15 +5,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
    private Switch sWifi;
    private Switch sAir;
    private Switch sBlue;
+   private Switch sSilent;
    private Button btnStop;
    private Button btnReset;
    private Button btnStart;
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
     private WifiManager wifiManager;
     private BluetoothAdapter mBluetoothAdapter;
     private CountDownTimer countDownTimer;
+    private AudioManager audioManager;
 
     private long secUntilFinished;
     private int seconds;
@@ -62,22 +66,78 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         btnStart = findViewById(R.id.btnCountdown);
         btnReset = findViewById(R.id.btnReset);
         btnStop = findViewById(R.id.btnStop);
-
         btnInput = findViewById(R.id.btnInput);
         btnInput.setText(secToUFCStandard(startSec));
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         sWifi = findViewById(R.id.switchWIFI);
         sBlue = findViewById(R.id.switchBLUE);
         sAir = findViewById(R.id.switchAir);
+        sSilent = findViewById(R.id.switchSilent);
+
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+
+        //******************************************************************************************
+        //******************************************************************************************
+
+        final Context context = this;
+
+        sSilent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (sSilent.isChecked()){
+
+                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    if (notificationManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+
+                        sSilentHandler();
+                    }
+                }
+            }
+        });
+
+        //******************************************************************************************
+        //******************************************************************************************
     }
 
+    private void sSilentHandler(){
+        final Dialog d = new Dialog(MainActivity.this);
+        d.setTitle("Request Access");
+        d.setContentView(R.layout.dialog_permission);
+
+        Button btnCancel = d.findViewById(R.id.btnCancel);
+        Button btnOK = d.findViewById(R.id.btnOK);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sSilent.setChecked(false);
+                d.dismiss();
+            }
+        });
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+                    intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                    startActivity(intent);
+                }
+                d.dismiss();
+            }
+        });
+        d.show();
+    }
 
     public void countdownInputHandler(View view){
 
         final Dialog d = new Dialog(MainActivity.this);
         d.setTitle("Countdown Picker");
-        d.setContentView(R.layout.dialog);
+        d.setContentView(R.layout.dialog_timeinput);
 
         Button btnDelete = (Button) d.findViewById(R.id.btnDelete);
         Button btnSave = (Button) d.findViewById(R.id.btnSave);
@@ -166,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
                 btnStart.setVisibility(View.VISIBLE);
                 btnStop.setVisibility(View.GONE);
                 btnReset.setVisibility(View.GONE);
+                btnInput.setClickable(true);
             }
         };
     }
@@ -177,17 +238,32 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         if (sBlue.isChecked())
                 mBluetoothAdapter.disable();
 
+
+        if (sSilent.isChecked())
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
+
         if (sAir.isChecked()) {
 
+            // read the airplane mode setting
+            boolean isEnabled = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                isEnabled = Settings.System.getInt(
+                        getContentResolver(),
+                        Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+            }
+
             // toggle airplane mode
-            Settings.System.putInt(
-                    getContentResolver(),
-                    Settings.System.AIRPLANE_MODE_ON, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Settings.System.putInt(
+                        getContentResolver(),
+                        Settings.Global.AIRPLANE_MODE_ON, isEnabled ? 0 : 1);
+            }
 
             // Post an intent to reload
-            //Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-            //intent.putExtra("state", !false);
-            //sendBroadcast(intent);
+            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+            intent.putExtra("state", !isEnabled);
+            sendBroadcast(intent);
         }
     }
 
@@ -217,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         btnStop.setText("STOP");
         btnStop.setTextSize(18);
         btnReset.setVisibility(View.GONE);
-        btnInput.setClickable(false);
+        btnInput.setClickable(true);
         btnInput.setText(secToUFCStandard(startSec));
     }
 

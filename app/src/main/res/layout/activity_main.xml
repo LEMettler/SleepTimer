@@ -89,13 +89,24 @@
             tools:layout_margin="10dp" />
 
         <Switch
+            android:id="@+id/switchSilent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="SilentMode "
+            android:textColor="@color/colorText"
+            android:textColorLink="@android:color/holo_blue_dark"
+            android:textSize="24sp"
+            tools:layout_margin="10dp" />
+
+        <Switch
             android:id="@+id/switchAir"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="AirplaneMode "
             android:textColor="@color/colorText"
             android:textColorLink="@android:color/holo_blue_dark"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:visibility="gone"
             tools:layout_margin="10dp" />
 
