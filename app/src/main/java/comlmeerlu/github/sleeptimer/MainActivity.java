@@ -1,11 +1,14 @@
 package comlmeerlu.github.sleeptimer;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -13,12 +16,17 @@ import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NumberPicker.OnClickListener{
@@ -75,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         sSilent = findViewById(R.id.switchSilent);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //******************************************************************************************
         //******************************************************************************************
@@ -102,37 +110,6 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         //******************************************************************************************
     }
 
-    private void sSilentHandler(){
-        final Dialog d = new Dialog(MainActivity.this);
-        d.setTitle("Request Access");
-        d.setContentView(R.layout.dialog_permission);
-
-        Button btnCancel = d.findViewById(R.id.btnCancel);
-        Button btnOK = d.findViewById(R.id.btnOK);
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sSilent.setChecked(false);
-                d.dismiss();
-            }
-        });
-
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-                    intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                    startActivity(intent);
-                }
-                d.dismiss();
-            }
-        });
-        d.show();
-    }
-
     public void countdownInputHandler(View view){
 
         final Dialog d = new Dialog(MainActivity.this);
@@ -145,18 +122,18 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
         final NumberPicker pickHours = (NumberPicker) d.findViewById(R.id.pickHours);
         pickHours.setMaxValue(9);
         pickHours.setMinValue(0);
-        pickHours.setWrapSelectorWheel(false);
+        pickHours.setWrapSelectorWheel(true);
 
         final NumberPicker pickMin = (NumberPicker) d.findViewById(R.id.pickMin);
         pickMin.setMaxValue(59);
         pickMin.setMinValue(0);
-        pickMin.setWrapSelectorWheel(false);
+        pickMin.setWrapSelectorWheel(true);
         pickMin.setValue(30);
 
         final NumberPicker pickSec = (NumberPicker) d.findViewById(R.id.pickSec);
         pickSec.setMaxValue(59);
-        pickSec.setMinValue(1);
-        pickSec.setWrapSelectorWheel(false);
+        pickSec.setMinValue(0);
+        pickSec.setWrapSelectorWheel(true);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,32 +153,6 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
             }
         });
         d.show();
-    }
-
-    private String secToUFCStandard(int totalSeconds){
-        final int MINUTES_IN_AN_HOUR = 60;
-        final int SECONDS_IN_A_MINUTE = 60;
-
-        int seconds = totalSeconds % SECONDS_IN_A_MINUTE;
-        int totalMinutes = totalSeconds / SECONDS_IN_A_MINUTE;
-        int minutes = totalMinutes % MINUTES_IN_AN_HOUR;
-        int hours = totalMinutes / MINUTES_IN_AN_HOUR;
-
-        String ufcTime = "";
-        if (hours < 10) {
-            ufcTime = "0";
-        }
-        ufcTime += Integer.toString(hours) + ":";
-        if (minutes < 10) {
-            ufcTime += "0";
-        }
-        ufcTime += Integer.toString(minutes) + ":";
-        if (seconds < 10) {
-            ufcTime += "0";
-        }
-        ufcTime += Integer.toString(seconds);
-
-        return ufcTime;
     }
 
     private void initCountdownTimer(int time){
@@ -232,6 +183,23 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
     }
 
     public void changeStates(){
+
+        //******************************************************************************************
+        CharSequence txtToast;
+
+        if (stopMusic()) {
+            txtToast = "Music stopped!";
+        } else {
+            txtToast = "Failed to stop Music!";
+
+        }
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, txtToast, duration);
+        toast.show();
+        //******************************************************************************************
+
         if (sWifi.isChecked())
             wifiManager.setWifiEnabled(false);
 
@@ -265,6 +233,147 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
             intent.putExtra("state", !isEnabled);
             sendBroadcast(intent);
         }
+    }
+
+
+    private boolean stopMusic() {
+
+        int result = -1;
+
+        //api 26 (android 8.0)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            //no real purpose for this listener
+            AudioManager.OnAudioFocusChangeListener focusListener = new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int focusChange) {
+                }
+            };
+
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            AudioFocusRequest request = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setAudioAttributes(attributes)
+                    .setAcceptsDelayedFocusGain(true)
+                    .setOnAudioFocusChangeListener(focusListener)
+                    .build();
+
+            result = audioManager.requestAudioFocus(request);
+
+            //api 25-14
+        } else if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+
+            //no real purpose for this listener
+            AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int focusChange) {
+                }
+            };
+
+            result = audioManager.requestAudioFocus(afChangeListener,
+                    // Use the music stream
+                    AudioManager.STREAM_MUSIC,
+                    // Request permanent focus
+                    AudioManager.AUDIOFOCUS_GAIN);
+        }
+
+        //return whether the music could be stopped or not
+        return (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+    }
+
+
+
+    /**
+     * kill Applications() geht in der neuen api nicht mehr, deshalb den lautstärkefocus einfach ziehen
+     * https://developer.android.com/guide/topics/media-apps/audio-focus
+     *
+    public void killApplications(){
+        ActivityManager am;
+        am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> processes;
+        processes = am.getRunningAppProcesses();
+
+        //******************************************************************************************
+            //hier ein popup mit den processes für debugging
+
+        final Dialog d = new Dialog(MainActivity.this);
+        d.setTitle("debug");
+        d.setContentView(R.layout.dialog_processes);
+        d.setCancelable(true);
+
+        ListView list = d.findViewById(R.id.listview);
+
+        MyAdapter adp = new MyAdapter(processes, MainActivity.this);
+        list.setAdapter(adp);
+
+        d.show();
+        //******************************************************************************************
+
+
+    }
+     */
+
+    private String secToUFCStandard(int totalSeconds){
+        final int MINUTES_IN_AN_HOUR = 60;
+        final int SECONDS_IN_A_MINUTE = 60;
+
+        int seconds = totalSeconds % SECONDS_IN_A_MINUTE;
+        int totalMinutes = totalSeconds / SECONDS_IN_A_MINUTE;
+        int minutes = totalMinutes % MINUTES_IN_AN_HOUR;
+        int hours = totalMinutes / MINUTES_IN_AN_HOUR;
+
+        String ufcTime = "";
+        if (hours < 10) {
+            ufcTime = "0";
+        }
+        ufcTime += Integer.toString(hours) + ":";
+        if (minutes < 10) {
+            ufcTime += "0";
+        }
+        ufcTime += Integer.toString(minutes) + ":";
+        if (seconds < 10) {
+            ufcTime += "0";
+        }
+        ufcTime += Integer.toString(seconds);
+
+        return ufcTime;
+    }
+
+    //**********************************************************************************************
+    //***********************Button-Handler*********************************************************
+
+    private void sSilentHandler(){
+        final Dialog d = new Dialog(MainActivity.this);
+        d.setTitle("Request Access");
+        d.setContentView(R.layout.dialog_permission);
+
+        Button btnCancel = d.findViewById(R.id.btnCancel);
+        Button btnOK = d.findViewById(R.id.btnOK);
+
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sSilent.setChecked(false);
+                d.dismiss();
+            }
+        });
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+                    intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                    startActivity(intent);
+                }
+                d.dismiss();
+            }
+        });
+        d.show();
     }
 
     public void btnStopHandler(View view){
@@ -323,6 +432,5 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnCl
 
     @Override
     public void onClick(View v) {
-
     }
 }
